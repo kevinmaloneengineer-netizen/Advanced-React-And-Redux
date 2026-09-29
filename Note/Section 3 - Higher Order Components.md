@@ -3,7 +3,7 @@
 ## 64. An Introduction to Higher Order Components
 
 - **Higher Order Component (HOC)** là một React component bình thường, được tạo ra với mục đích **tái sử dụng code** giữa các component.
-- Dấu hiệu nên dùng HOC: copy-paste cùng một đoạn logic qua nhiều component → code bị duplicate.
+- Dấu hiệu nên dùng HOC: copy-paste cùng một đoạn logic qua nhiều component -> code bị duplicate.
 - Công thức: `Component thường + HOC = Enhanced (Composed) Component`.
   - Component thường: VD `App`, `CommentBox`, `CommentList`.
   - Enhanced component: có thêm chức năng hoặc dữ liệu do HOC "cho" thêm, component gốc không phải tự viết logic đó.
@@ -12,7 +12,7 @@
 
 - `connect()` của `react-redux` chính là một HOC. Dùng Redux với `connect` tức là đã dùng HOC.
 - Việc `connect` làm hộ: kết nối lên `Provider`, lấy state từ Redux store và bind action creators, rồi truyền xuống component dưới dạng props.
-- Nếu không có HOC, mỗi component (`CommentBox`, `CommentList`…) phải tự viết code truy cập store → lặp code. `connect` gom toàn bộ logic đó vào một chỗ, đã viết sẵn trong thư viện, và mọi component đều dùng lại được.
+- Nếu không có HOC, mỗi component (`CommentBox`, `CommentList`…) phải tự viết code truy cập store -> lặp code. `connect` gom toàn bộ logic đó vào một chỗ, đã viết sẵn trong thư viện, và mọi component đều dùng lại được.
 
 ## 73. Steps for Building a HOC
 
@@ -26,7 +26,7 @@
   - Thêm `mapStateToProps` trả về `{ auth: state.auth }` để component đọc được trạng thái đăng nhập.
   - Kiểm tra auth ở **2 thời điểm**, bằng 2 lifecycle method:
     - `componentDidMount`: component vừa render lần đầu (user vào thẳng `/post`).
-    - `componentDidUpdate`: component nhận props mới (user đang ở `/post` rồi bấm Sign Out → `auth` đổi).
+    - `componentDidUpdate`: component nhận props mới (user đang ở `/post` rồi bấm Sign Out -> `auth` đổi).
   - Logic giống nhau nên gom vào một helper method, gọi từ cả 2 lifecycle:
     ```js
     componentDidMount() { this.shouldNavigateAway(); }
@@ -41,7 +41,7 @@
 
 ## 74. Forced Navigation with React Router
 
-- Chỉ kiểm tra ở `componentDidMount` là **không đủ**: bỏ sót trường hợp user đang ở trang được bảo vệ rồi sign out. Lúc đó component không mount lại mà chỉ re-render với `props.auth` mới → cần `componentDidUpdate`.
+- Chỉ kiểm tra ở `componentDidMount` là **không đủ**: bỏ sót trường hợp user đang ở trang được bảo vệ rồi sign out. Lúc đó component không mount lại mà chỉ re-render với `props.auth` mới -> cần `componentDidUpdate`.
 - **Programmatic navigation** (chuyển trang bằng code, không phải user bấm `Link`): component được render qua `Route` sẽ tự nhận prop `this.props.history`. Gọi `history.push(path)` để chuyển trang:
   ```js
   if (!this.props.auth) {
@@ -49,11 +49,11 @@
   }
   ```
 - Khi chưa đăng nhập mà vào `/post`: URL đổi sang `/post` trong chốc lát, rồi `componentDidMount` chạy và đẩy user về `/`.
-- Hiện đại (React Router v6/v7): không còn `props.history`. Dùng hook `useNavigate()` → `navigate("/")`, hoặc render `<Navigate to="/" />`. Hook chỉ dùng được trong function component; thay 2 lifecycle bằng `useEffect(..., [auth])` (chạy khi mount và mỗi lần `auth` đổi).
+- Hiện đại (React Router v6/v7): không còn `props.history`. Dùng hook `useNavigate()` -> `navigate("/")`, hoặc render `<Navigate to="/" />`. Hook chỉ dùng được trong function component; thay 2 lifecycle bằng `useEffect(..., [auth])` (chạy khi mount và mỗi lần `auth` đổi).
 
 ## 75. Creating the HOC
 
-- **Quy ước đặt tên file:** chữ thường đầu (`requireAuth.js`) → file export default một **function**; chữ hoa đầu (`CommentBox.js`) → export default một **component/class**.
+- **Quy ước đặt tên file:** chữ thường đầu (`requireAuth.js`) -> file export default một **function**; chữ hoa đầu (`CommentBox.js`) -> export default một **component/class**.
 - **HOC scaffold** (boilerplate gần như mọi HOC đều có):
   ```js
   import React, { Component } from "react";
@@ -94,10 +94,10 @@
 ## 77. Passing Through Props
 
 - **Vấn đề:** sau khi chèn HOC vào giữa, component con **mất props** từ các component cha phía trên.
-  - Cây component: `App` → `Route` → `connect` → **`requireAuth`** → `CommentBox`.
-  - `Route` truyền `history`, `connect` truyền action creators (`saveComment`…) → tất cả đến `ComposedComponent` chứ **không** tự đến `CommentBox`.
-  - Hậu quả: submit comment → lỗi `saveComment is not a function`.
-- **Nguyên nhân gốc:** `ComposedComponent` render `<ChildComponent />` không kèm props nào → "đứt chuỗi" truyền props.
+  - Cây component: `App` -> `Route` -> `connect` -> **`requireAuth`** -> `CommentBox`.
+  - `Route` truyền `history`, `connect` truyền action creators (`saveComment`…) -> tất cả đến `ComposedComponent` chứ **không** tự đến `CommentBox`.
+  - Hậu quả: submit comment -> lỗi `saveComment is not a function`.
+- **Nguyên nhân gốc:** `ComposedComponent` render `<ChildComponent />` không kèm props nào -> "đứt chuỗi" truyền props.
 - **Cách fix:** spread toàn bộ props nhận được xuống component con:
   ```js
   render() {
@@ -106,7 +106,7 @@
   ```
   - Vì HOC là component "trung gian" chèn vào, nó có trách nhiệm chuyển nguyên vẹn props từ cha xuống con. Gần như mọi HOC đều có dòng `{...this.props}`.
 - Cách bọc khi có cả `connect`: `export default connect(null, actions)(requireAuth(CommentBox));` (chú ý kỹ dấu ngoặc).
-- Tổng kết quy trình HOC (bài 73): viết logic vào 1 component → tạo file + scaffold → chuyển logic sang HOC → **luôn pass props xuống**.
+- Tổng kết quy trình HOC (bài 73): viết logic vào 1 component -> tạo file + scaffold -> chuyển logic sang HOC -> **luôn pass props xuống**.
 - Hiện đại (function component + hook), tương đương bản đang dùng trong project:
   ```js
   const requireAuth = (ChildComponent) => {
