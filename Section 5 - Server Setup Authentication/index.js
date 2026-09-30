@@ -1,0 +1,19 @@
+const http = require("http");
+const mongoose = require("mongoose");
+const app = require("./app");
+const config = require("./config");
+
+async function start() {
+    await mongoose.connect(config.mongoUri);
+    console.log("Connected to MongoDB");
+
+    const server = http.createServer(app);
+    server.listen(config.port, () => {
+        console.log("Server listening on:", config.port);
+    });
+}
+
+start().catch((err) => {
+    console.error(err);
+    process.exit(1);
+});
